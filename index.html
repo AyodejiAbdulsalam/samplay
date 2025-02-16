@@ -3,65 +3,62 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title> Family joy 🎵</title>
+    <title>Family Joy 🎵</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #1e1e1e;
-            color: white;
-            text-align: center;
-            padding: 20px;
+        @keyframes colorRotate {
+            0% { border-color: #ff0000; }
+            25% { border-color: #00ff00; }
+            50% { border-color: #0000ff; }
+            75% { border-color: #ff00ff; }
+            100% { border-color: #ff0000; }
         }
-
-        .music-player {
-            background: #333;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
-            max-width: 400px;
-            margin: auto;
-        }
-
-        h1 {
-            font-size: 24px;
-            margin-bottom: 10px;
-        }
-
-        .controls {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 15px;
-            margin-top: 20px;
-        }
-
-        button {
-            background-color: #007bff;
-            color: white;
-            border: none;
-            padding: 10px 15px;
-            font-size: 16px;
-            cursor: pointer;
-            border-radius: 5px;
-        }
-
-        button:hover {
-            background-color: #0056b3;
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
         }
     </style>
 </head>
-<body>
+<body class="bg-gray-900 text-white text-center p-6">
+    <h1 class="text-2xl font-bold mb-4">🎶 Welcome Back, Music Lover! 🎶</h1>
+    <div class="bg-gray-800 p-6 rounded-lg shadow-lg max-w-md mx-auto">
+        <h2 id="song-title" class="text-lg font-semibold">Song Name</h2>
+        <audio id="audio-player" src="" ontimeupdate="updateProgressBar()"></audio>
 
-    <h1>🎶 Family joy 🎶</h1>
-    <div class="music-player">
-        <h2 id="song-title">Song Name</h2>
-        <audio id="audio-player" src=""></audio>
-
-        <div class="controls">
-            <button onclick="prevSong()">⏮️ Prev</button>
-            <button onclick="togglePlayPause()">▶️ Play</button>
-            <button onclick="nextSong()">⏭️ Next</button>
+        <div class="w-full bg-gray-700 h-2 rounded mt-3">
+            <div id="progress-bar" class="h-full bg-blue-500 rounded" style="width: 0%;"></div>
         </div>
+
+        <div class="flex justify-center items-center gap-4 mt-4">
+            <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onclick="prevSong()">⏮ Prev</button>
+            <button id="play-pause" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onclick="togglePlayPause()">▶ Play</button>
+            <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onclick="nextSong()">⏭ Next</button>
+        </div>
+        
+        <div class="flex justify-center items-center gap-4 mt-4">
+            <button class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded" onclick="toggleShuffle()">🔀 Shuffle</button>
+            <button class="bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded" onclick="toggleRepeat()">🔁 Repeat</button>
+            <input type="range" min="0" max="1" step="0.1" value="1" id="volume-control" class="w-24" onchange="changeVolume(this.value)">
+        </div>
+    </div>
+
+    <div class="w-48 h-48 mx-auto mt-6 flex items-center justify-center rounded-full text-white text-2xl font-bold border-8 animate-spin"
+         style="animation: colorRotate 4s linear infinite;">
+        Samplay
+    </div>
+
+    <p class="mt-4 text-gray-400">Built by Salam Ayodeji</p>
+    
+    <a href="https://wa.me/?text=Hi%20Salam%2C%20I'd%20like%20to%20buy%20you%20a%20coffee.%20Can%20I%20get%20your%20account%20number%3F" 
+       class="mt-4 inline-block bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded animate-pulse">
+        ☕ Buy Me Coffee
+    </a>
+
+    <div class="mt-6 max-w-md mx-auto bg-gray-800 p-4 rounded-lg shadow-lg">
+        <h3 class="text-lg font-bold">Leave a Comment</h3>
+        <textarea id="comment-box" class="w-full p-2 mt-2 bg-gray-700 rounded text-white" placeholder="Write your comment..."></textarea>
+        <button onclick="submitComment()" class="mt-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Submit</button>
+        <div id="comment-section" class="mt-4 text-left"></div>
     </div>
 
     <script>
@@ -78,42 +75,21 @@
             { name: "Smile", src: "Juice-WRLD-Smile.mp3" },
             { name: "Titanic", src: "Juice-WRLD-Titanic.mp3" },
             { name: "Wishing Well", src: "Juice-WRLD-Wishing-Well.mp3" },     
-            { name: "Srew Juice", src: "Juice-WRLD-Srew-juice.mp3" },                   
+            { name: "Screw Juice", src: "Juice-WRLD-Screw-Juice.mp3" }                    
         ];
 
-        let currentSongIndex = 0;
-        const audioPlayer = document.getElementById("audio-player");
-        const songTitle = document.getElementById("song-title");
-
-        function loadSong(index) {
-            audioPlayer.src = songs[index].src;
-            songTitle.textContent = songs[index].name;
-        }
-
-        function togglePlayPause() {
-            if (audioPlayer.paused) {
-                audioPlayer.play();
-                document.querySelector(".controls button:nth-child(2)").textContent = "⏸️ Pause";
-            } else {
-                audioPlayer.pause();
-                document.querySelector(".controls button:nth-child(2)").textContent = "▶️ Play";
+        function submitComment() {
+            let commentBox = document.getElementById("comment-box");
+            let commentText = commentBox.value.trim();
+            if (commentText) {
+                let commentSection = document.getElementById("comment-section");
+                let newComment = document.createElement("p");
+                newComment.className = "bg-gray-700 p-2 rounded mt-2";
+                newComment.textContent = commentText;
+                commentSection.appendChild(newComment);
+                commentBox.value = "";
             }
         }
-
-        function nextSong() {
-            currentSongIndex = (currentSongIndex + 1) % songs.length;
-            loadSong(currentSongIndex);
-            audioPlayer.play();
-        }
-
-        function prevSong() {
-            currentSongIndex = (currentSongIndex - 1 + songs.length) % songs.length;
-            loadSong(currentSongIndex);
-            audioPlayer.play();
-        }
-
-        loadSong(currentSongIndex);
     </script>
-
 </body>
 </html>
