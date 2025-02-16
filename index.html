@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Family joy 🎵</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #1e1e1e;
+            color: white;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .music-player {
+            background: #333;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+            max-width: 400px;
+            margin: auto;
+        }
+
+        h1 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>🎶 Family joy 🎶</h1>
+    <div class="music-player">
+        <h2 id="song-title">Song Name</h2>
+        <audio id="audio-player" src=""></audio>
+
+        <div class="controls">
+            <button onclick="prevSong()">⏮️ Prev</button>
+            <button onclick="togglePlayPause()">▶️ Play</button>
+            <button onclick="nextSong()">⏭️ Next</button>
+        </div>
+    </div>
+
+    <script>
+        const songs = [
+            { name: "ransom", src: "Lil-Tecca-Ransom.mp3" },
+            { name: "only me", src: "Asake-Only-Me-(TrendyBeatz.com).mp3" },
+            { name: "why love", src: "Asake-Why-Love-(TrendyBeatz.com).mp3"},
+            { name: "All The Love", src: "Ayra-Starr-All-The-Love-(TrendyBeatz.com).mp3"},
+            { name: "Yayo", src: "Rema-Yayo-(TrendyBeatz.com).mp3" },
+            { name: "March Am", src: "Rema-March-Am-(TrendyBeatz.com).mp3" },
+            { name: "ALL Girls Are The Same", src: "Juice-WRLD-All-Girls-Are-The-Same.mp3" },
+            { name: "Conversation", src: "Juice-WRLD-Conversations.mp3" },
+            { name: "Lucid Dreams", src: "Juice-WRLD-Lucid-Dreams.mp3" },
+            { name: "Smile", src: "Juice-WRLD-Smile.mp3" },
+            { name: "Titanic", src: "Juice-WRLD-Titanic.mp3" },
+            { name: "Wishing Well", src: "Juice-WRLD-Wishing-Well.mp3" },     
+            { name: "Srew Juice", src: "Juice-WRLD-Srew-juice.mp3" },                   
+        ];
+
+        let currentSongIndex = 0;
+        const audioPlayer = document.getElementById("audio-player");
+        const songTitle = document.getElementById("song-title");
+
+        function loadSong(index) {
+            audioPlayer.src = songs[index].src;
+            songTitle.textContent = songs[index].name;
+        }
+
+        function togglePlayPause() {
+            if (audioPlayer.paused) {
+                audioPlayer.play();
+                document.querySelector(".controls button:nth-child(2)").textContent = "⏸️ Pause";
+            } else {
+                audioPlayer.pause();
+                document.querySelector(".controls button:nth-child(2)").textContent = "▶️ Play";
+            }
+        }
+
+        function nextSong() {
+            currentSongIndex = (currentSongIndex + 1) % songs.length;
+            loadSong(currentSongIndex);
+            audioPlayer.play();
+        }
+
+        function prevSong() {
+            currentSongIndex = (currentSongIndex - 1 + songs.length) % songs.length;
+            loadSong(currentSongIndex);
+            audioPlayer.play();
+        }
+
+        loadSong(currentSongIndex);
+    </script>
+
+</body>
+</html>
